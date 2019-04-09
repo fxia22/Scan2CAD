@@ -1,4 +1,4 @@
-# Scan2CAD
+# Scan2CAD (CVPR 2019 Oral)
 
 We present *Scan2CAD*, a novel data-driven method that learns to align 3D CAD models from a shape database to 3D scans.
 
@@ -50,17 +50,21 @@ We published a new benchmark for CAD model alignment in 3D scans (and more tasks
 
 2. Ask for dataset: (see sections below. You will need *ScanNet*, *ShapeNet* and *Scan2CAD*). 
 
-4. Copy dataset content into `./Routines/Script/`.
+3. Copy dataset content into `./Routines/Script/`.
 
-3. Visualize data:
+4. Visualize data:
 
 ```./Routines/Script/Annotation2Mesh.py```
 
-4. Generate data:
+5. Voxelize CADs (shapenet):
+
+```./Routines/Script/CADVoxelization.py```
+
+6. Generate data (correspondences):
 
 ```./Routines/Script/GenerateCorrespondences.py```
 
-5. Start `pytorch` training for heatmap prediction:
+7. Start `pytorch` training for heatmap prediction:
 
 ```comming soon```
 
@@ -68,7 +72,7 @@ We published a new benchmark for CAD model alignment in 3D scans (and more tasks
 
 If you would like to download the *Scan2CAD* dataset, please fill out this [google-form](https://goo.gl/forms/gJRMjzj05whyJDlO2). 
 
-A download script will be provided to automatically download the dataset.
+A download link will be provided to download a `.zip` file (approx. 8MB) that contains the dataset.
 
 ## Format of the Datasets
 
@@ -136,7 +140,7 @@ Once you have downloaded the dataset files, you can run `./Routines/Script/Annot
 
 ### Scan and CAD Repository
 
-In this work we used 3D scans from the [ScanNet](https://github.com/ScanNet/ScanNet) dataset and CAD models from [ShapeNet (version 2.0)](https://www.shapenet.org/). If you want to use it too, then you have to send an email and ask for the data - they usually do it very quickly.
+In this work we used 3D scans from the [ScanNet](https://github.com/ScanNet/ScanNet) dataset and CAD models from [ShapeNetCore (version 2.0)](https://www.shapenet.org/). If you want to use it too, then you have to send an email and ask for the data - they usually do it very quickly.
 
 Here is a sample (see in `./Assets/scannet-sample/` and `./Assets/shapenet-sample/`):
 
@@ -151,7 +155,7 @@ The data must be processed such that scans are represented as **sdf** and CADs a
 In order to create **sdf** voxel grids from the scans, *volumetric fusion* is performed to fuse depth maps into a voxel grid containing the entire scene.
 For the sdf grid we used a voxel resolution of `3cm` and a truncation distance of `15cm`. 
 
-In order to generate the **df** voxel grids for the CADs we used [this](https://github.com/christopherbatty/SDFGen) repo (thanks to @christopherbatty).
+In order to generate the **df** voxel grids for the CADs we used a modification (see `CADVoxelization.py`) of [this](https://github.com/christopherbatty/SDFGen) repo (thanks to @christopherbatty).
 
 ### Creating Training Samples
 
