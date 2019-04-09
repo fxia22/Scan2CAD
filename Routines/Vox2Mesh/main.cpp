@@ -51,7 +51,7 @@ void get_position_and_color_from_vox(Vox &vox, PlyMesh &mesh, Eigen::Vector3f vo
 				int index = k*vox.grid_dims[1]*vox.grid_dims[0] + j*vox.grid_dims[0] + i;
 				if (std::abs(vox.sdf[index]) <= inargs.trunc*vox.res) {
 					Eigen::Vector3f p;
-					p = (vox.grid2world*Eigen::Vector4f(i, j, k, 1)).topRows(3);
+					p = (vox.grid2world*Eigen::Vector4f(i, j, k, 1)).topRows(3) * vox.res;
 					positions.push_back(p);
 					Eigen::Vector3f color;
 					ColorMap::colormap(vox.pdf[index], color, inargs.cmap);
@@ -75,6 +75,7 @@ void get_position_and_color_from_vox(Vox &vox, PlyMesh &mesh, Eigen::Vector3f vo
 	Eigen::Vector3f res;
 	res = 0.45*voxelsize*vox.res;
 
+	std::cout << "res" << res << std::endl;
 	for (int i = 0; i < n_voxels; i++) {
 		Eigen::Vector3f p = positions[i];
 

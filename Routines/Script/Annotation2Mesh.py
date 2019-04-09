@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
                 with open(outdir + "/scan.ply", mode='wb') as f:
                     PlyData(mesh_scan).write(f)
-
+            print(catid_cad, id_cad)
             cad_file = params["shapenet"] + "/" + catid_cad + "/" + id_cad  + "/models/model_normalized.obj"
             cad_mesh = pywavefront.Wavefront(cad_file, collect_faces=True, parse=True)
             Mcad = make_M_from_tqs(t, q, s)
@@ -112,16 +112,17 @@ if __name__ == '__main__':
             for name, mesh in cad_mesh.meshes.items():
                 for f in mesh.faces:
                     faces.append((np.array(f[0:3]) + len(verts0),))
-                    n0 = cad_mesh.parser.normals[f[3]]
+                    #from IPython import embed; embed()
+                    #n0 = cad_mesh.parser.normals[f[3]]
                     v0 = cad_mesh.vertices[f[0]]
                     v1 = cad_mesh.vertices[f[1]]
                     v2 = cad_mesh.vertices[f[2]]
                     if len(v0) == 3:
-                        cad_mesh.vertices[f[0]] = v0 + n0 + color
+                        cad_mesh.vertices[f[0]] = v0 + (0,0,1) + color
                     if len(v1) == 3:
-                        cad_mesh.vertices[f[1]] = v1 + n0 + color
+                        cad_mesh.vertices[f[1]] = v1 + (0,0,1) + color
                     if len(v2) == 3:
-                        cad_mesh.vertices[f[2]] = v2 + n0 + color
+                        cad_mesh.vertices[f[2]] = v2 + (0,0,1) + color
             faces0.extend(faces)
             
             for v in cad_mesh.vertices[:]:
@@ -133,6 +134,8 @@ if __name__ == '__main__':
                 verts.append(vi + ni + ci)
             verts0.extend(verts)
 
+    #print(verts)
+    print(faces0)
     verts0 = np.asarray(verts0, dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4'), ('nx', 'f4'), ('ny', 'f4'), ('nz', 'f4'), ('red', 'u1'), ('green', 'u1'), ('blue', 'u1')])
     faces0 = np.asarray(faces0, dtype=[('vertex_indices', 'i4', (3,))])
     objdata = PlyData([PlyElement.describe(verts0, 'vertex', comments=['vertices']),  PlyElement.describe(faces0, 'face')], comments=['faces'])
