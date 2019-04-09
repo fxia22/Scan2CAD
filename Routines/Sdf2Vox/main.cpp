@@ -22,14 +22,6 @@ struct InputArgs {
 } inargs;
 
 
-struct Vox {
-	Eigen::Vector3i grid_dims;
-	Eigen::Matrix4f grid2world;
-	float res;
-	std::vector<float> sdf;
-	std::vector<float> pdf;
-};
-
 
 void parse_args(int argc, char** argv) {
 	args::ArgumentParser parser("This is a test program.", "This goes after the options.");
@@ -76,8 +68,8 @@ int main(int argc, char** argv) {
 	Eigen::Vector3f offset;
 
 	if (inFile.is_open()) {
-		inFile >> vox.grid_dims[0] >> vox.grid_dims[1] >> vox.grid_dims[2];
-		std::cout << vox.grid_dims[0] << " " << vox.grid_dims[1] << " " << vox.grid_dims[2] << std::endl;
+		inFile >> vox.dims[0] >> vox.dims[1] >> vox.dims[2];
+		std::cout << vox.dims[0] << " " << vox.dims[1] << " " << vox.dims[2] << std::endl;
 
 		inFile >> offset[0] >> offset[1] >> offset[2];
 		inFile >> vox.res;
@@ -90,24 +82,23 @@ int main(int argc, char** argv) {
 
 		std::cout << vox.grid2world << std::endl;
 
-		int n_elems = vox.grid_dims(0)*vox.grid_dims(1)*vox.grid_dims(2);	
+		int n_elems = vox.dims(0)*vox.dims(1)*vox.dims(2);	
 
 		float data;
 		while (inFile >> data) {
 			vox.sdf.push_back(data);
-			std::cout << data << std::endl;
 		}
 	}
 
-	save_vox<float, 1, float, 1> (inargs.out, vox.grid_dims, vox.res, vox.grid2world, vox.sdf, vox.pdf);
+	save_vox(inargs.out, vox);
 
 
 	/*if (inargs.in.find(".vox2") != std::string::npos)
-		load_vox<float, 1, float, 1>(inargs.in, vox.grid_dims, vox.res, vox.grid2world, vox.sdf, vox.pdf);
+		load_vox<float, 1, float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf, vox.pdf);
 	else if (inargs.in.find(".vox") != std::string::npos)
-		load_vox<float, 1>(inargs.in, vox.grid_dims, vox.res, vox.grid2world, vox.sdf);
+		load_vox<float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf);
 	else if (inargs.in.find(".df") != std::string::npos) {
-		load_vox<float, 1>(inargs.in, vox.grid_dims, vox.res, vox.grid2world, vox.sdf, false);	
+		load_vox<float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf, false);	
 	} else {
 		fprintf(stderr, "Error: Grid format not known.\n");
 		std::exit(1);
@@ -128,8 +119,8 @@ int main(int argc, char** argv) {
 		vox.pdf.resize(vox.sdf.size());
 		std::fill(vox.pdf.begin(), vox.pdf.end(), 0);
 		if (inargs.redcenter) {
-			int c = vox.grid_dims(0)/2;
-			int dim = vox.grid_dims(0);
+			int c = vox.dims(0)/2;
+			int dim = vox.dims(0);
 			int w = 1;
 			for (int i = c - w; i < c + w + 1; i++)
 				for (int j = c - w; j < c + w + 1; j++)
