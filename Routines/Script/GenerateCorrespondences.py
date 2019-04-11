@@ -30,7 +30,7 @@ def make_M_from_tqs(t, q, s):
     S[0:3, 0:3] = np.diag(s)
 
     M = T.dot(R).dot(S)
-    return M 
+    return M
 
 if __name__ == '__main__':
     params = JSONHelper.read("./Parameters.json")
@@ -39,10 +39,14 @@ if __name__ == '__main__':
 
     for r in JSONHelper.read("./full_annotations.json"):
         id_scan = r["id_scan"]
-        if id_scan != "scene0470_00":
+        id_scan_num = int(id_scan[5:9])
+        if id_scan_num > 300:
             continue
+        #if id_scan != "scene0470_00":
+        #    continue
 
         voxfile_scan = params["scannet_voxelized"] + "/" + id_scan + "/" + id_scan + ".vox"
+        print(voxfile_scan)
         Mscan = make_M_from_tqs(r["trs"]["translation"], r["trs"]["rotation"], r["trs"]["scale"])
 
         training_data = []
@@ -53,10 +57,10 @@ if __name__ == '__main__':
             id_cad = model["id_cad"]
             Mcad = make_M_from_tqs(model["trs"]["translation"], model["trs"]["rotation"], model["trs"]["scale"])
             print("catid-cad", catid_cad, "id-cad", id_cad, model["sym"])
-            
+
             basename_trainingdata = "_".join([id_scan, catid_cad, id_cad, str(counter)]) + "_" # <-- this defines the basename of the training data for crops and heatmaps. pattern is "id_scan/catid_cad/id_cad/i_cad/i_kp"
 
-            
+
             # -> Create CAD heatmaps
             voxfile_cad = params["shapenet_voxelized"] + "/" + catid_cad + "/" + id_cad + "__0__.df"
             kps_cad = np.array(model["keypoints_cad"]["position"]).reshape(3, -1, order="F")

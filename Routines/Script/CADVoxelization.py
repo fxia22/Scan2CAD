@@ -24,24 +24,25 @@ if __name__ == '__main__':
         id_cad = f.split("/",6)[5]
 
         outdir = params["shapenet_voxelized"] + "/" + catid_cad
-        pathlib.Path(outdir).mkdir(parents=True, exist_ok=True) 
+        pathlib.Path(outdir).mkdir(parents=True, exist_ok=True)
         outfile_df =  outdir + "/" + id_cad + "__0__.df"
 
         # -> voxelize as DF
-        try: 
+        try:
             program = ["../DFGen/main", f, str(dim), "1", "1", outfile_df]
             print(" ".join(str(x) for x in program))
-            subprocess.check_call(program) 
+            print(program)
+            subprocess.check_call(program)
         except subprocess.CalledProcessError:
             pass
         # <-
-        
+
         # -> visualize as PLY file
-        try: 
+        try:
             outfile_ply = outfile_df.rsplit(".",1)[0] + ".ply"
             program = ["../Vox2Mesh/main", "--in", outfile_df, "--out", outfile_ply, "--is_unitless", "1"]
             print(" ".join(str(x) for x in program))
-            subprocess.check_call(program) 
+            subprocess.check_call(program)
         except subprocess.CalledProcessError:
             pass
         # <-

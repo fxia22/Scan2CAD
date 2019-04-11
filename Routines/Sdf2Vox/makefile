@@ -1,7 +1,7 @@
-all : main
+all : sdf2vox
 
-main : main.cpp
+sdf2vox : main.cpp
 	c++ -I../Base -std=c++11 -Wall -O3 -o $@ $<
 
 clean:
-	rm main
+	rm sdf2vox

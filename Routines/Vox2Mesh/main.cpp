@@ -141,9 +141,9 @@ int main(int argc, char** argv) {
 	Box3D::create(box_vertices, box_normals, box_elements);
 
 	Vox vox;
-	Eigen::Vector3f voxelsize(1, 1, 1);
 
 	vox = load_vox(inargs.in);
+	Eigen::Vector3f voxelsize(vox.res, vox.res, vox.res);
 
 	if (inargs.is_unitless) {
 		Eigen::Vector3f t;

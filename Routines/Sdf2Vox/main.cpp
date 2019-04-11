@@ -57,14 +57,14 @@ void parse_args(int argc, char** argv) {
 };
 
 int main(int argc, char** argv) {
-   	parse_args(argc, argv); 
+   	parse_args(argc, argv);
 
 	Vox vox;
 	Eigen::Vector3f voxelsize(1, 1, 1);
 
 	std::cout << inargs.in << " " << inargs.out << std::endl;
 	std::ifstream inFile(inargs.in);
-	
+
 	Eigen::Vector3f offset;
 
 	if (inFile.is_open()) {
@@ -75,14 +75,14 @@ int main(int argc, char** argv) {
 		inFile >> vox.res;
 		std::cout << vox.res << std::endl;
 
-		vox.grid2world << 1, 0, 0, offset[0],
-						  0, 1, 0, offset[1],
-						  0, 0, 1, offset[2],
+		vox.grid2world << vox.res, 0, 0, offset[0] * vox.res,
+						  0, vox.res, 0, offset[1] * vox.res,
+						  0, 0, vox.res, offset[2] * vox.res,
 						  0, 0, 0, 1;
 
 		std::cout << vox.grid2world << std::endl;
 
-		int n_elems = vox.dims(0)*vox.dims(1)*vox.dims(2);	
+		int n_elems = vox.dims(0)*vox.dims(1)*vox.dims(2);
 
 		float data;
 		while (inFile >> data) {
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 	else if (inargs.in.find(".vox") != std::string::npos)
 		load_vox<float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf);
 	else if (inargs.in.find(".df") != std::string::npos) {
-		load_vox<float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf, false);	
+		load_vox<float, 1>(inargs.in, vox.dims, vox.res, vox.grid2world, vox.sdf, false);
 	} else {
 		fprintf(stderr, "Error: Grid format not known.\n");
 		std::exit(1);

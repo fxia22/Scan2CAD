@@ -1,6 +1,6 @@
 # hidden files
 .*
-
+Assets/*
 
 # generated 
 full_annotations.json
