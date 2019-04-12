@@ -37,11 +37,13 @@ if __name__ == '__main__':
 
     print("NOTE: Symmetry not handled. You have to take care of it.")
 
+    counter = 0
+    training_data = []
     for r in JSONHelper.read("./full_annotations.json"):
         id_scan = r["id_scan"]
         id_scan_num = int(id_scan[5:9])
-        if id_scan_num > 300:
-            continue
+        #if id_scan_num > 300:
+        #    continue
         #if id_scan != "scene0470_00":
         #    continue
 
@@ -49,9 +51,7 @@ if __name__ == '__main__':
         print(voxfile_scan)
         Mscan = make_M_from_tqs(r["trs"]["translation"], r["trs"]["rotation"], r["trs"]["scale"])
 
-        training_data = []
 
-        counter = 0
         for model in r["aligned_models"]:
             catid_cad = model["catid_cad"]
             id_cad = model["id_cad"]
